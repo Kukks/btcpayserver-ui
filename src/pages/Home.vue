@@ -1,9 +1,12 @@
 <template>
     <f7-page name="Home">
-        <f7-navbar title="My App"/>
         <f7-block>
             <p>{{$theme}} </p>
             <p>{{$device}} </p>
+            <p>home material
+                <f7-icon material="home"></f7-icon></p>
+            <p>home f7
+                <f7-icon f7="house"></f7-icon></p>
         </f7-block>
         <f7-block>
             <f7-segmented>

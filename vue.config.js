@@ -1,7 +1,7 @@
 module.exports = {
     publicPath: '',
     devServer: {
-        public: process.env.DEVSERVER_PUBLIC
+        public: process.env.CORDOVA_PLATFORM? process.env.DEVSERVER_PUBLIC: ""
     },
     pluginOptions: {
         cordovaPath: 'src-cordova'

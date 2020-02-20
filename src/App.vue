@@ -1,8 +1,13 @@
 <template>
     <f7-app :params="f7params" :theme-dark="darkTheme">
+        <f7-navbar title="My App">
+
+            <f7-link slot="left" icon-md="material:menu" icon-aurora="material:menu" icon-ios="f7:bars" icon panel-open="left"></f7-link>
+        </f7-navbar>
+        <f7-navbar title="My App2">
+        </f7-navbar>
         <LeftPanel></LeftPanel>
         <f7-view main url="/" >
-
         </f7-view>
     </f7-app>
 
@@ -24,8 +29,8 @@
     })
     export default class App extends Vue {
         public f7params: Framework7Params = {
-            id: "io.framework7.testapp", // app bundle ID
-            name: "Framework7", // app name
+            id: "org.btcpayserver.ui", // app bundle ID
+            name: "BTCPay Server UI", // app name
             theme: "auto", // automatic theme detection
             // app routes
             routes: routes

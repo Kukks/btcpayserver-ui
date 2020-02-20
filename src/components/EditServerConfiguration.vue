@@ -8,7 +8,7 @@
                 required
                 validate
                 clear-button
-                v-model="serverUrl"
+                :value="serverUrl" @input="serverUrl=$event.target.value"
         >
         </f7-list-input>
         <f7-list-input
@@ -17,7 +17,7 @@
                 info="An API key generated from BTCPay"
                 required
                 validate
-                v-model="apiKey"
+                :value="apiKey" @input="apiKey=$event.target.value"
                 clear-button
         >
         </f7-list-input>
