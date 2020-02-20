@@ -1,29 +1,39 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
-  </div>
+    <f7-app :params="f7params" :theme-dark="darkTheme">
+        <LeftPanel></LeftPanel>
+        <f7-view main url="/" >
+
+        </f7-view>
+    </f7-app>
+
+
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import HelloWorld from './components/HelloWorld.vue';
+    import {Component, Vue} from "vue-property-decorator";
+    import {Framework7Params} from "framework7/components/app/app-class";
+    import {routes} from "@/routes";
+    import LeftPanel from "@/components/LeftPanel.vue";
+    import {RootModule} from "@/store";
+    import {useStore} from "vuex-simple";
 
-@Component({
-  components: {
-    HelloWorld,
-  },
-})
-export default class App extends Vue {}
+    @Component({
+        components: {
+            LeftPanel
+        }
+    })
+    export default class App extends Vue {
+        public f7params: Framework7Params = {
+            id: "io.framework7.testapp", // app bundle ID
+            name: "Framework7", // app name
+            theme: "auto", // automatic theme detection
+            // app routes
+            routes: routes
+        };
+        public store: RootModule = useStore(this.$store);
+
+        public get darkTheme() {
+            return this.store.appPreferences.darkMode;
+        }
+    }
 </script>
-
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
