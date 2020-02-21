@@ -48,9 +48,9 @@
         public store: RootModule = useStore(this.$store);
         $refs!: {
             servereditform: HTMLFormElement;
-        }
+        };
 
-        @Watch('data')
+        @Watch(nameof(this.data))
         public dataChanged(val: ServerModuleData, oldVal: ServerModuleData) {
             if (val) {
                 this.serverUrl = val.serverUrl;
@@ -62,9 +62,7 @@
         }
 
         public submit() {
-            debugger;
-            const val = this.$refs.servereditform.checkValidity();
-            if (val) {
+            if (this.$refs.servereditform.checkValidity()) {
                 this.$emit("submit", this as ServerModuleData)
             }
         }
