@@ -24,10 +24,6 @@
 </template>
 <script lang="ts">
     import {Component, Prop, Vue} from "vue-property-decorator";
-    import {ServerModuleData, RootModule} from "../store";
-    import {Guid} from 'guid-typescript';
-    import {useStore} from "vuex-simple";
-    import EditServerConfiguration from "@/components/EditServerConfiguration.vue";
 
     @Component({})
     export default class Home extends Vue {

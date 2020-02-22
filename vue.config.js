@@ -1,6 +1,3 @@
-const tsNameof = require("ts-nameof");
-const path = require("path");
-
 module.exports = {
     publicPath: '',
     devServer: {
@@ -15,7 +12,7 @@ module.exports = {
             .use("ts-loader")
             .loader("ts-loader")
             .tap(options => {
-                options.getCustomTransformers = path.resolve(__dirname, 'vue-ts-nameof.js');
+                options.compiler = "ttypescript";
                 return options
         });
 
@@ -24,10 +21,10 @@ module.exports = {
             .use("ts-loader")
             .loader("ts-loader")
             .tap(options => {
-                options.getCustomTransformers = path.resolve(__dirname, 'vue-ts-nameof.js');
+                options.compiler = "ttypescript";
                 return options
             });
     }
-}
+};
 
 

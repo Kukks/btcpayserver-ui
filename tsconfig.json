@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "plugins": [{ "transform": "ts-nameof", "type": "raw" }],
     "target": "esnext",
     "module": "esnext",
     "strict": true,

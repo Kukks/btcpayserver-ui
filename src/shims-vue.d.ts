@@ -3,3 +3,6 @@ declare module '*.vue' {
   export default Vue
 
 }
+declare interface Window {
+  nameof: (x: any) => string
+}

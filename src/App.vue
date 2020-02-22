@@ -1,7 +1,6 @@
 <template>
     <f7-app :params="f7params" :theme-dark="darkTheme">
         <f7-navbar title="My App">
-
             <f7-link slot="left" icon-md="material:menu" icon-aurora="material:menu" icon-ios="f7:bars" icon panel-open="left"></f7-link>
         </f7-navbar>
         <f7-navbar title="My App2">
@@ -19,8 +18,8 @@
     import {Framework7Params} from "framework7/components/app/app-class";
     import {routes} from "@/routes";
     import LeftPanel from "@/components/LeftPanel.vue";
-    import {RootModule} from "@/store";
     import {useStore} from "vuex-simple";
+    import {RootModule} from "@/store/root.module";
 
     @Component({
         components: {

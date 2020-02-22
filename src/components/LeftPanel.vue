@@ -2,7 +2,7 @@
     <f7-panel left cover>
         <f7-page>
             <f7-navbar title="Server Selection"/>
-            <ServerList></ServerList>
+            <ServerList :servers="servers"></ServerList>
 
             <f7-list simple-list>
                 <f7-list-item>
@@ -15,10 +15,10 @@
 </template>
 
 <script lang="ts">
-    import {RootModule} from "@/store";
     import {useStore} from "vuex-simple";
     import {Component, Vue} from "vue-property-decorator";
     import ServerList from "@/components/ServerList.vue";
+    import {RootModule} from "@/store/root.module";
 
     @Component({
         components: {ServerList}
@@ -27,6 +27,10 @@
     export default class LeftPanel extends Vue {
         public store: RootModule = useStore(this.$store);
 
+        public get servers(){
+            return this.store.servers.map(this.store.server);
+        }
+        
         public get darkTheme() {
             return this.store.appPreferences.darkMode;
         }
