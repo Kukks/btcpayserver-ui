@@ -1,12 +1,10 @@
 <template>
     <f7-app :params="f7params" :theme-dark="darkTheme">
-        <f7-navbar title="My App">
-            <f7-link slot="left" icon-md="material:menu" icon-aurora="material:menu" icon-ios="f7:bars" icon panel-open="left"></f7-link>
+        <f7-navbar title="BTCPay Server">
+            <f7-link v-if="showLeftPanel" slot="left" icon-md="material:menu" icon-aurora="material:menu" icon-ios="f7:bars" icon panel-open="left"></f7-link>
         </f7-navbar>
-        <f7-navbar title="My App2">
-        </f7-navbar>
-        <LeftPanel></LeftPanel>
-        <f7-view main url="/" >
+        <LeftPanel v-if="showLeftPanel"></LeftPanel>
+        <f7-view main url="/" :push-state="!$device.cordova" >
         </f7-view>
     </f7-app>
 
@@ -17,9 +15,9 @@
     import {Component, Vue} from "vue-property-decorator";
     import {Framework7Params} from "framework7/components/app/app-class";
     import {routes} from "@/routes";
-    import LeftPanel from "@/components/LeftPanel.vue";
     import {useStore} from "vuex-simple";
     import {RootModule} from "@/store/root.module";
+    import LeftPanel from "@/components/LeftPanel.vue";
 
     @Component({
         components: {
@@ -36,6 +34,10 @@
         };
         public store: RootModule = useStore(this.$store);
 
+        public get showLeftPanel(){
+            return this.store.servers.length > 0;
+        }
+        
         public get darkTheme() {
             return this.store.appPreferences.darkMode;
         }

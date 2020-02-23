@@ -1,22 +1,32 @@
 <template>
     <f7-page name="home">
-        <EditServerConfiguration v-if="editMode" :data="serverData" @cancel="onCancel()" @submit="onSaveData($event)"></EditServerConfiguration>
+        <template v-if="editMode">
+            <EditServerConfiguration v-if="!serverId" @cancel="onCancel()"
+                                     @submit="onSaveData($event)"></EditServerConfiguration>
+            <EditServerConfiguration v-else :server="serverData" @cancel="onCancel()"
+                                     @submit="onSaveData($event)"></EditServerConfiguration>
+        </template>
+        <template v-else-if="serverId">
+            <f7-toolbar bottom></f7-toolbar>
+            <f7-fab v-show="!editMode" position="bottom-center" slot="fixed"  @click="editMode = true">
+                <f7-icon ios="f7:settings" aurora="f7:settings" md="material:settings"></f7-icon>
+            </f7-fab>
+        </template>
     </f7-page>
 </template>
 <script lang="ts">
     import {Component, Prop, Vue} from "vue-property-decorator";
-    import {ServerModuleData} from "../store";
-    import {Guid} from 'guid-typescript';
     import {useStore} from "vuex-simple";
-    import EditServerConfiguration from "@/components/EditServerConfiguration.vue";
     import {RootModule} from "@/store/root.module";
+    import EditServerConfiguration from "@/components/EditServerConfiguration.vue";
+    import {ServerModuleData} from "@/store";
 
     @Component({
         components: {EditServerConfiguration}
     })
     export default class ViewServer extends Vue {
         @Prop({required: false})
-        public serverId?: Guid;
+        public serverId?: string;
         public store: RootModule = useStore(this.$store);
         public editMode = false;
 
@@ -24,40 +34,40 @@
             if (this.serverId) {
                 return this.store.server(this.serverId);
             }
-            return {apiKey: "", id: "", serverUrl: ""};
+            return null;
         }
 
         public mounted() {
-
             if (!this.serverId) {
                 this.editMode = true;
             }
         }
 
-        public onSaveData(data: ServerModuleData) {
-            if (this.serverId) {
-                const serverStore = this.store.server(this.serverId);
-                if (serverStore) {
-                    serverStore.update(data);
-                    return;
-                }
+        public async onSaveData(data: ServerModuleData) {
+            console.warn("savedata", data);
+            const serverId = await this.store.addOrUpdateServer(data);
+            console.warn("serverId", serverId);
+            if (this.serverId != serverId) {
+                this.$f7router?.navigate({
+                    name: 'server',
+                    params: {
+                        serverId
+                    }
+                });
+                this.$f7router?.clearPreviousHistory();
             }
-
-            this.serverId = this.store.addServer();
-            this.$f7router?.navigate({
-                name: 'server',
-                params: {
-                    "id": this.serverId.toString()
-                }
-            });
         }
-        
-        public onCancel(){
-            if(this.serverId){
+
+        public onCancel() {
+            if (this.serverId) {
                 this.editMode = false;
                 return;
             }
+            console.log(this.$f7router?.currentRoute.url);
             this.$f7router?.back();
+
+            console.log(this.$f7router?.currentRoute.url);
+            
         }
     }
 </script>

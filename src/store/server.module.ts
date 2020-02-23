@@ -17,7 +17,7 @@ export class ServerModule implements ServerModuleData {
     public stores: string[] = [];
 
     constructor(data: ServerModuleData = {apiKey: "", serverUrl: ""}) {
-        this.update(data);
+        this.updateData(data);
     }
 
     @Getter()
@@ -35,7 +35,7 @@ export class ServerModule implements ServerModuleData {
     @Action()
     public async update(data: ServerModuleData) {
         this.updateData(data);
-        this.authenticationResult.update(await serverService.authenticate(this));
+        this.authenticationResult.updateData(await serverService.authenticate(this));
     }
 
     @Action()
@@ -56,6 +56,7 @@ export class ServerModule implements ServerModuleData {
     @Mutation()
     public addOrUpdateStore(data: StoreModuleData) {
         if (this.stores.indexOf(data.id) === -1) {
+            this.stores.push(data.id);
             registerModule(store, this.getStoreModuleNamespace(data.id), new StoreModule(data))
         } else {
             this.store(data.id)?.update(data);

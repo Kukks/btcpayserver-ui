@@ -14,7 +14,7 @@
     import {Component, Prop, Vue} from 'vue-property-decorator';
     import {ServerModuleData} from "@/store";
 
-    @Component
+    @Component({})
     export default class ServerList extends Vue {
         @Prop()
         public servers!: ServerModuleData[];

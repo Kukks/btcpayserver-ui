@@ -11,7 +11,7 @@ export class AuthenticationResultModule implements AuthenticationResultModuleDat
 
 
     @Mutation()
-    public update(data: AuthenticationResultModuleData) {
+    public updateData(data: AuthenticationResultModuleData) {
         Object.assign(this, data);
     }
 }
