@@ -28,7 +28,7 @@
         public store: RootModule = useStore(this.$store);
 
         public get servers(){
-            return this.store.servers.map(this.store.server);
+            return this.store.servers.map(value => this.store.server(value));
         }
         
         public get darkTheme() {

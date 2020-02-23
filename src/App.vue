@@ -6,6 +6,7 @@
         <LeftPanel v-if="showLeftPanel"></LeftPanel>
         <f7-view main url="/" :push-state="!$device.cordova" >
         </f7-view>
+       
     </f7-app>
 
 

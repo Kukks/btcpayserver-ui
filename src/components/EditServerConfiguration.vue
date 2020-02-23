@@ -3,8 +3,8 @@
             <f7-list-input
                     label="BTCPay Server Url"
                     type="url"
-                    placeholder="btcpay.com"
-                    info="Default validation"
+                    placeholder="https://btcpay.com"
+                    info="The full url of the BTCPay Server that you are using."
                     required
                     validate
                     clear-button

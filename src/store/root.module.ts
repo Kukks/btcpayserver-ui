@@ -3,7 +3,9 @@ import {Guid} from "guid-typescript";
 import {AppPreferencesModule} from "@/store/app-preferences.module";
 import {ServerModuleData} from "@/store/server-module.data";
 import {ServerModule} from "@/store/server.module";
-import store, {StoreModule, StoreModuleData} from "@/store/index";
+import store from "@/store/index";
+import {Store} from "vuex";
+import storeProvider from "@/store/index";
 
 export class RootModule {
     @State()
@@ -13,8 +15,8 @@ export class RootModule {
 
     @Getter()
     public get server() {
-        return (id: string) => {
-            return useModule<ServerModule>(store, this.getServerModuleNamespace(id)) ?? null;
+        return (id: string, explicitStore: Store<RootModule> | null = null) => {
+            return useModule<ServerModule>(explicitStore ?? storeProvider.store, this.getServerModuleNamespace(id)) ?? null;
         }
     }
 
@@ -22,12 +24,13 @@ export class RootModule {
     public addServer(data: ServerModuleData) {
         if (data.id) {
             this.servers.push(data.id);
-            registerModule(store, this.getServerModuleNamespace(data.id), new ServerModule(data));
+            registerModule(storeProvider.store, this.getServerModuleNamespace(data.id), new ServerModule(data), {preserveState: false});
         }
     }
 
     @Action()
     public async addOrUpdateServer(data: ServerModuleData) {
+        let result: string = "";
         if (data.id) {
             let existingModule = this.server(data.id);
             if (!existingModule) {
@@ -35,18 +38,29 @@ export class RootModule {
             }
             existingModule = this.server(data.id);
             await existingModule?.update(data);
-            return data.id;            
+            result = data.id;
         } else {
-            const id = Guid.create().toString();
-            this.addServer({...data, id});
-            return id;
+            result = Guid.create().toString();
+            this.addServer({...data, id: result});
         }
+        await this.server(result)?.update();
+        return result;
     }
 
     @Mutation()
     public removeServer(id: string) {
         this.servers.splice(this.servers.indexOf(id), 1);
-        unregisterModule(store, this.getServerModuleNamespace(id))
+        unregisterModule(storeProvider.store, this.getServerModuleNamespace(id))
+    }
+
+    @Action()
+    public async onRehydrate(store) {
+        console.warn("onRehydrate", this, this.servers);
+        for (const value of this.servers) {
+            registerModule(store, this.getServerModuleNamespace(value), new ServerModule(), {preserveState: true});
+            console.warn("onRehydrate.1");
+            await this.server(value, store)?.onRehydrate(store);
+        }
     }
 
     private getServerModuleNamespace(id: string) {

@@ -5,8 +5,13 @@ import {AuthenticationResultModule} from "@/store/authentication-result.module";
 import {StoreModuleData} from "@/store/store-module.data";
 import store from "@/store/index"
 import serverService from "@/services/server.service";
+import {Store} from "vuex";
+import {RootModule} from "@/store/root.module";
+import storeProvider from "@/store/index";
 
 export class ServerModule implements ServerModuleData {
+    @State()
+    public id!: string;
     @State()
     public serverUrl!: string;
     @State()
@@ -22,8 +27,8 @@ export class ServerModule implements ServerModuleData {
 
     @Getter()
     public get store() {
-        return (id: string) => {
-            return useModule<StoreModule>(store, this.getStoreModuleNamespace(id));
+        return (id: string, explicitStore: Store<RootModule> | null = null) => {
+            return useModule<StoreModule>(explicitStore ?? storeProvider.store, this.getStoreModuleNamespace(id));
         }
     }
 
@@ -33,9 +38,13 @@ export class ServerModule implements ServerModuleData {
     }
 
     @Action()
-    public async update(data: ServerModuleData) {
-        this.updateData(data);
+    public async update(data?: ServerModuleData) {
+        if (data)
+            this.updateData(data);
         this.authenticationResult.updateData(await serverService.authenticate(this));
+        if (this.authenticationResult.authenticated) {
+            await this.fetchStores();
+        }
     }
 
     @Action()
@@ -50,20 +59,43 @@ export class ServerModule implements ServerModuleData {
     @Action()
     public removeStore(id: string) {
         this.stores.splice(this.stores.indexOf(id), 1);
-        unregisterModule(store, this.getStoreModuleNamespace(id))
+        unregisterModule(storeProvider.store, this.getStoreModuleNamespace(id))
     }
 
     @Mutation()
     public addOrUpdateStore(data: StoreModuleData) {
         if (this.stores.indexOf(data.id) === -1) {
             this.stores.push(data.id);
-            registerModule(store, this.getStoreModuleNamespace(data.id), new StoreModule(data))
+            registerModule(storeProvider.store, this.getStoreModuleNamespace(data.id), new StoreModule(data), {preserveState: false})
         } else {
             this.store(data.id)?.update(data);
         }
     }
 
-    private getStoreModuleNamespace(id: string) {
-        return [`stores[${id}]`];
+    public hasPermission(permission: string, ...args: any[]) {
+        if (this.authenticationResult == null || !this.authenticationResult.authenticated) {
+            return false;
+        }
+        return this.authenticationResult.permissions.indexOf(permission);
     }
+
+    public onRehydrate(store) {
+        if(!this.stores){
+            debugger;
+        }
+        console.warn("onRehydrate2",this.stores,store);
+        this.stores.forEach(value => {
+            console.warn("onRehydrate2.1");
+            registerModule(store, this.getStoreModuleNamespace(value), new StoreModule(), {preserveState: true});
+            this.store(value, store)?.onRehydrate(store);
+        })
+    }
+
+    private getStoreModuleNamespace(id: string) {
+        return [`${this.id}_stores[${id}]`];
+    }
+}
+
+export class Permissions {
+    public static readonly CanCreateStores = "cancreatestore";
 }

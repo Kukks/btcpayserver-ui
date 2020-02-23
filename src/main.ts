@@ -6,15 +6,22 @@ import Framework7Vue from "framework7-vue/framework7-vue.esm.bundle";
 import "framework7/css/framework7.bundle.css";
 import 'framework7-icons';
 import 'material-design-icons-iconfont';
-import store from "@/store";
+import storeProvider from "@/store";
+import {Permissions} from "@/store/server.module";
+import {useStore} from "vuex-simple";
+import {RootModule} from "@/store/root.module";
+
 
 Vue.config.productionTip = false;
+Vue.prototype.Permissions = Permissions;
 console.log(process.env);
-const init = () => {
+const init = async () => {
+  await storeProvider.initStore();
+  await useStore<RootModule>(storeProvider.store).onRehydrate(storeProvider.store);
   Framework7.use(Framework7Vue);
 
   new Vue({
-    store,
+    store: storeProvider.store,
     render: h => h(App)
   }).$mount("#app");
 };

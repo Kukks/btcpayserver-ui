@@ -16,4 +16,8 @@ export class StoreModule implements StoreModuleData {
         Object.assign(this, data);
     }
 
+    public onRehydrate(store) {
+        console.log("nothign to do")
+    }
+
 }
