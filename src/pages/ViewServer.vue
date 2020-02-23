@@ -15,11 +15,35 @@
 
         <f7-block v-if="serverData">
             <f7-row>
-                <f7-col large="25" medium="50" small="100">
+                <f7-col width="100" medium="50" large="25">
                     <ServerStatus v-if="serverData.authenticationResult"
                                   :data="serverData.authenticationResult"></ServerStatus>
                 </f7-col>
-                <f7-col large="25" medium="50" small="100">
+                <f7-col  width="100" medium="50" large="25" >
+                    <StoreList :data="serverData.stores.map(value => serverData.store(value))" :server-id="serverId"
+                               :can-add-store="serverData.hasPermission(Permissions.CanCreateStores)"></StoreList>
+                </f7-col>
+                <f7-col width="100" medium="50" large="25">
+                    <ServerStatus v-if="serverData.authenticationResult"
+                                  :data="serverData.authenticationResult"></ServerStatus>
+                </f7-col>
+                <f7-col  width="100" medium="50" large="25" >
+                    <StoreList :data="serverData.stores.map(value => serverData.store(value))" :server-id="serverId"
+                               :can-add-store="serverData.hasPermission(Permissions.CanCreateStores)"></StoreList>
+                </f7-col>
+                <f7-col width="100" medium="50" large="25">
+                    <ServerStatus v-if="serverData.authenticationResult"
+                                  :data="serverData.authenticationResult"></ServerStatus>
+                </f7-col>
+                <f7-col  width="100" medium="50" large="25" >
+                    <StoreList :data="serverData.stores.map(value => serverData.store(value))" :server-id="serverId"
+                               :can-add-store="serverData.hasPermission(Permissions.CanCreateStores)"></StoreList>
+                </f7-col>
+                <f7-col width="100" medium="50" large="25">
+                    <ServerStatus v-if="serverData.authenticationResult"
+                                  :data="serverData.authenticationResult"></ServerStatus>
+                </f7-col>
+                <f7-col  width="100" medium="50" large="25" >
                     <StoreList :data="serverData.stores.map(value => serverData.store(value))" :server-id="serverId"
                                :can-add-store="serverData.hasPermission(Permissions.CanCreateStores)"></StoreList>
                 </f7-col>
