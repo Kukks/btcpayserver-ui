@@ -8,7 +8,8 @@
                 :title="server.serverUrl"
         >
 
-            <f7-link slot="after-title"  :href="`/servers/${server.id}`"> > </f7-link>
+            <f7-link slot="after-title"  :href="`/servers/${server.id}`">
+                <f7-icon ios="f7:chevron_right" aurora="f7:chevron_right" md="material:chevron_right"></f7-icon> </f7-link>
 
             <f7-accordion-content>
                 <f7-list>

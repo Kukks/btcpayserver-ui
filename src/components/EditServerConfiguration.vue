@@ -8,8 +8,7 @@
                     required
                     validate
                     :readonly="!editMode"
-                    :value="serverUrl" @input="serverUrl=$event.target.value"
-            >
+                    :value="serverUrl" @input="serverUrl=$event.target.value">
             </f7-list-input>
             <f7-list-input
                     label="API Key"
@@ -18,9 +17,7 @@
                     required
                     validate
                     :readonly="!editMode"
-                    :value="apiKey" @input="apiKey=$event.target.value"
-
-            >
+                    :value="apiKey" @input="apiKey=$event.target.value">
             </f7-list-input>
             <f7-list-item-row v-if="editMode">
                 <f7-list-item-cell>

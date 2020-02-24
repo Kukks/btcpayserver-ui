@@ -4,7 +4,7 @@
                                  @submit="onSaveData($event)"></EditServerConfiguration>
         
         <template v-else-if="serverId">
-            <EditServerConfiguration server="serverData" @cancel="onCancel()" :edit-mode="editMode"
+            <EditServerConfiguration :server="serverData" @cancel="onCancel()" :edit-mode="editMode"
                                      @submit="onSaveData($event)"></EditServerConfiguration>
             <f7-toolbar bottom></f7-toolbar>
             <f7-fab v-show="!editMode" position="bottom-center" slot="fixed" @click="editMode = true">
@@ -99,11 +99,7 @@
                 this.editMode = false;
                 return;
             }
-            console.log(this.$f7router?.currentRoute.url);
-            this.$f7router?.back();
-
-            console.log(this.$f7router?.currentRoute.url);
-            
+            this.$f7router?.back();            
         }
     }
 </script>

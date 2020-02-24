@@ -8,8 +8,7 @@
                 required
                 validate
                 :readonly="!editMode"
-                :value="name" @input="name=$event.target.value"
-        >
+                :value="name" @input="name=$event.target.value">
         </f7-list-input>
         <f7-list-item-row v-if="editMode">
             <f7-list-item-cell>
