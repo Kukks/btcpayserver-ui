@@ -13,7 +13,7 @@
             </f7-fab>
         </template>
 
-        <f7-block v-if="serverData">
+        <f7-block v-if="serverData && !editMode">
             <f7-row>
                 <f7-col width="100" medium="50" large="25">
                     <ServerStatus v-if="serverData.authenticationResult"
@@ -49,8 +49,6 @@
                 </f7-col>
             </f7-row>
         </f7-block>
-
-        {{store}}
     </f7-page>
 </template>
 <script lang="ts">
@@ -61,6 +59,7 @@
     import {ServerModule, ServerModuleData} from "@/store";
     import ServerStatus from "@/components/ServerStatus.vue";
     import StoreList from "@/components/StoreList.vue";
+    import {Routes} from "@/routes";
 
     @Component({
         components: {StoreList, EditServerConfiguration, ServerStatus}
@@ -88,7 +87,7 @@
             const serverId = await this.store.addOrUpdateServer(data);
             if (this.serverId != serverId) {
                 this.$f7router?.navigate({
-                    name: 'server',
+                    name: Routes.ViewServer,
                     params: {
                         serverId
                     }

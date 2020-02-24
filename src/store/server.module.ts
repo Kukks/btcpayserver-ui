@@ -3,11 +3,11 @@ import {StoreModule} from "@/store/store.module";
 import {ServerModuleData} from "@/store/server-module.data";
 import {AuthenticationResultModule} from "@/store/authentication-result.module";
 import {StoreModuleData} from "@/store/store-module.data";
-import store from "@/store/index"
 import serverService from "@/services/server.service";
 import {Store} from "vuex";
 import {RootModule} from "@/store/root.module";
 import storeProvider from "@/store/index";
+import storeService from "@/services/store.service";
 
 export class ServerModule implements ServerModuleData {
     @State()
@@ -49,7 +49,7 @@ export class ServerModule implements ServerModuleData {
 
     @Action()
     public async fetchStores() {
-        const stores: StoreModuleData[] = [{id: "1", name: "Store 1"}, {id: "2", name: "Store 2"}];
+        const stores: StoreModuleData[] = await storeService.fetchStores(this.apiKey);
         const storeIds = stores.map(value => value.id);
         const removedStores = this.stores.filter(value => storeIds.indexOf(value) === 1);
         removedStores.forEach(this.removeStore);
@@ -62,14 +62,19 @@ export class ServerModule implements ServerModuleData {
         unregisterModule(storeProvider.store, this.getStoreModuleNamespace(id))
     }
 
-    @Mutation()
-    public addOrUpdateStore(data: StoreModuleData) {
+    @Action()
+    public async addOrUpdateStore(data: StoreModuleData) {
+        if(!data.id){
+           data.id = (await storeService.createStore(this.apiKey, data.name)).id;
+        }
+        
         if (this.stores.indexOf(data.id) === -1) {
             this.stores.push(data.id);
             registerModule(storeProvider.store, this.getStoreModuleNamespace(data.id), new StoreModule(data), {preserveState: false})
         } else {
             this.store(data.id)?.update(data);
         }
+        return data.id;
     }
 
     public hasPermission(permission: string, ...args: any[]) {

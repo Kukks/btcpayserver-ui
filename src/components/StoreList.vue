@@ -5,12 +5,12 @@
             <f7-list>
                 <f7-list-item
                         v-for="store in data"
-                        :link="`/server/${serverId}/stores/${store.id}`"
+                        :link="`/servers/${serverId}/stores/${store.id}`"
                         :key="store.id"
                         :title="store.name"
                 />
                 <f7-list-button v-if="canAddStore" title="Add Store"
-                                link="/server/${serverId}/stores/add"></f7-list-button>
+                                :link="`/servers/${serverId}/stores/add`"></f7-list-button>
             </f7-list>
         </f7-card-content>
     </f7-card>

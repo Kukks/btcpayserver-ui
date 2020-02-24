@@ -7,7 +7,7 @@
         <f7-block>
             <f7-segmented>
              
-                <f7-button href="/server/">Add Server</f7-button>
+                <f7-button href="/servers/add">Add Server</f7-button>
             </f7-segmented>
         </f7-block>
     </f7-page>
