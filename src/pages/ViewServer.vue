@@ -1,12 +1,11 @@
 <template>
     <f7-page name="server">
-        <template v-if="editMode">
-            <EditServerConfiguration v-if="!serverId" @cancel="onCancel()"
-                                     @submit="onSaveData($event)"></EditServerConfiguration>
-            <EditServerConfiguration v-else :server="serverData" @cancel="onCancel()"
-                                     @submit="onSaveData($event)"></EditServerConfiguration>
-        </template>
+        <EditServerConfiguration v-if="!serverId" @cancel="onCancel()" :edit-mode="editMode"
+                                 @submit="onSaveData($event)"></EditServerConfiguration>
+        
         <template v-else-if="serverId">
+            <EditServerConfiguration server="serverData" @cancel="onCancel()" :edit-mode="editMode"
+                                     @submit="onSaveData($event)"></EditServerConfiguration>
             <f7-toolbar bottom></f7-toolbar>
             <f7-fab v-show="!editMode" position="bottom-center" slot="fixed" @click="editMode = true">
                 <f7-icon ios="f7:settings" aurora="f7:settings" md="material:settings"></f7-icon>

@@ -1,13 +1,12 @@
 <template>
     <f7-page name="store">
-        <template v-if="editMode">
-            <EditStoreConfiguration v-if="!serverId" @cancel="onCancel()"
-                                     @submit="onSaveData($event)"></EditStoreConfiguration>
-            <EditStoreConfiguration v-else :data="storeData" @cancel="onCancel()"
-                                     @submit="onSaveData($event)"></EditStoreConfiguration>
-        </template>
-       
+        <EditStoreConfiguration v-if="!storeId" @cancel="onCancel()" :edit-mode="editMode"
+                                @submit="onSaveData($event)"></EditStoreConfiguration>
+
+
         <template v-else-if="storeId">
+            <EditStoreConfiguration :data="storeData" @cancel="onCancel()" :edit-mode="editMode"
+                                    @submit="onSaveData($event)"></EditStoreConfiguration>
             <f7-toolbar bottom></f7-toolbar>
             <f7-fab v-show="!editMode" position="bottom-center" slot="fixed" @click="editMode = true">
                 <f7-icon ios="f7:settings" aurora="f7:settings" md="material:settings"></f7-icon>
@@ -20,7 +19,7 @@
     import {useStore} from "vuex-simple";
     import {RootModule} from "@/store/root.module";
     import EditStoreConfiguration from "@/components/EditStoreConfiguration.vue";
-    import {ServerModule, ServerModuleData, StoreModule, StoreModuleData} from "@/store";
+    import {ServerModule, StoreModule, StoreModuleData} from "@/store";
     import ServerStatus from "@/components/ServerStatus.vue";
     import StoreList from "@/components/StoreList.vue";
     import {Routes} from "@/routes";

@@ -7,11 +7,11 @@
                 info="The name of the store"
                 required
                 validate
-                clear-button
+                :readonly="!editMode"
                 :value="name" @input="name=$event.target.value"
         >
         </f7-list-input>
-        <f7-list-item-row>
+        <f7-list-item-row v-if="editMode">
             <f7-list-item-cell>
                 <f7-button type="submit" title="Save">Save</f7-button>
             </f7-list-item-cell>
@@ -35,6 +35,9 @@
         @Prop()
         public data?: StoreModuleData;
 
+        @Prop()
+        public editMode!: boolean;
+        
         $refs!: {
             form: VueEl<HTMLFormElement>;
         };
@@ -55,12 +58,18 @@
         }
 
         public submit() {
+            if(!this.editMode){
+                return;
+            }
             if (this.$refs.form.$el.reportValidity()) {
                 this.$emit("submit", {...this} as StoreModuleData)
             }
         }
 
         public cancel() {
+            if(!this.editMode){
+                return;
+            }
             this.dataChanged(this.data);
             this.$emit("cancel");
         }
