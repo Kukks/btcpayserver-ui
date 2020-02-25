@@ -49,7 +49,7 @@ export class ServerModule implements ServerModuleData {
 
     @Action()
     public async fetchStores() {
-        const stores: StoreModuleData[] = await storeService.fetchStores(this.apiKey);
+        const stores: StoreModuleData[] = await storeService.fetchStores(this);
         const storeIds = stores.map(value => value.id);
         const removedStores = this.stores.filter(value => storeIds.indexOf(value) === 1);
         removedStores.forEach(this.removeStore);
@@ -65,7 +65,7 @@ export class ServerModule implements ServerModuleData {
     @Action()
     public async addOrUpdateStore(data: StoreModuleData) {
         if(!data.id){
-           data.id = (await storeService.createStore(this.apiKey, data.name)).id;
+           data.id = (await storeService.createStore(this, data.name)).id;
         }
         
         if (this.stores.indexOf(data.id) === -1) {
@@ -85,12 +85,7 @@ export class ServerModule implements ServerModuleData {
     }
 
     public onRehydrate(store) {
-        if(!this.stores){
-            debugger;
-        }
-        console.warn("onRehydrate2",this.stores,store);
         this.stores.forEach(value => {
-            console.warn("onRehydrate2.1");
             registerModule(store, this.getStoreModuleNamespace(value), new StoreModule(), {preserveState: true});
             this.store(value, store)?.onRehydrate(store);
         })

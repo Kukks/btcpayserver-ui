@@ -4,7 +4,7 @@
             <f7-link v-if="showLeftPanel" slot="left" icon-md="material:menu" icon-aurora="material:menu" icon-ios="f7:bars" icon panel-open="left"></f7-link>
         </f7-navbar>
         <LeftPanel v-if="showLeftPanel"></LeftPanel>
-        <f7-view main url="/" :push-state="!$device.cordova" >
+        <f7-view main :url="generateUrl(Routes.Home)" :push-state="!$device.cordova" >
         </f7-view>
     </f7-app>
 
@@ -18,6 +18,7 @@
     import {useStore} from "vuex-simple";
     import {RootModule} from "@/store/root.module";
     import LeftPanel from "@/components/LeftPanel.vue";
+    import {startupParameters} from "@/services/url.serv";
 
     @Component({
         components: {
@@ -28,7 +29,7 @@
         public f7params: Framework7Params = {
             id: "org.btcpayserver.ui", // app bundle ID
             name: "BTCPay Server UI", // app name
-            theme: "auto", // automatic theme detection
+            theme: startupParameters["theme"] ?? "auto", // automatic theme detection
             // app routes
             routes: routes
         };

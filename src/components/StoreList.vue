@@ -10,11 +10,10 @@
                         :title="store.name"
                 />
                 <f7-list-button v-if="canAddStore" title="Add Store"
-                                :link="`/servers/${serverId}/stores/add`"></f7-list-button>
+                                :link="generateUrl(Routes.AddStore, {serverId})"></f7-list-button>
             </f7-list>
         </f7-card-content>
     </f7-card>
-
 </template>
 
 <script lang="ts">

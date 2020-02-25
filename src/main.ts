@@ -10,16 +10,17 @@ import storeProvider from "@/store";
 import {Permissions} from "@/store/server.module";
 import {useStore} from "vuex-simple";
 import {RootModule} from "@/store/root.module";
-
+import {generateUrl, Routes} from "@/routes";
 
 Vue.config.productionTip = false;
 Vue.prototype.Permissions = Permissions;
+Vue.prototype.generateUrl = generateUrl;
+Vue.prototype.Routes = Routes;
 console.log(process.env);
 const init = async () => {
   await storeProvider.initStore();
   await useStore<RootModule>(storeProvider.store).onRehydrate(storeProvider.store);
   Framework7.use(Framework7Vue);
-
   new Vue({
     store: storeProvider.store,
     render: h => h(App)
