@@ -1,11 +1,13 @@
 <template>
-    <f7-app :params="f7params" :theme-dark="darkTheme">
+    <f7-app :params="f7params" :theme-dark="darkTheme" :class="[ colorTheme? `color-${colorTheme}` : '']">
+        
         <f7-navbar title="BTCPay Server">
             <f7-link v-if="showLeftPanel" slot="left" icon-md="material:menu" icon-aurora="material:menu" icon-ios="f7:bars" icon panel-open="left"></f7-link>
         </f7-navbar>
         <LeftPanel v-if="showLeftPanel"></LeftPanel>
         <f7-view main :url="generateUrl(Routes.Home)" :push-state="!$device.cordova" >
         </f7-view>
+        <div v-html="cssTheme"></div>
     </f7-app>
 
 
@@ -35,12 +37,28 @@
         };
         public store: RootModule = useStore(this.$store);
 
+        public cssTheme = "";
         public get showLeftPanel(){
             return this.store.servers.length > 0;
         }
         
         public get darkTheme() {
             return this.store.appPreferences.darkMode;
+        }
+        
+        public get colorTheme() {
+            return this.store.appPreferences.colorTheme;
+        }
+        
+        public mounted(){
+            if(this.$f7ready){
+                this.$f7ready(f7 => {
+                    const sx = (f7.utils as any).colorThemeCSSProperties('#1e7a44');
+                    
+                    this.cssTheme = `<style>:root{${Object.keys(sx).map(value => `${value}: ${sx[value]}; `)} }</style>`;
+                });
+            }
+            
         }
     }
 </script>

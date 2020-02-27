@@ -7,7 +7,7 @@
         <template v-else-if="storeId">
             <EditStoreConfiguration :data="storeData" @cancel="onCancel()" :edit-mode="editMode"
                                     @submit="onSaveData($event)"></EditStoreConfiguration>
-            <f7-list-button title="POS" :link="generateUrl(Routes.SimplePOS)" ></f7-list-button>
+            <f7-list-button title="POS" :link="generateUrl(Routes.SimplePOS, { serverId, storeId})" ></f7-list-button>
 
             <f7-toolbar bottom></f7-toolbar>
             <f7-fab v-show="!editMode" position="bottom-center" slot="fixed" @click="editMode = true">

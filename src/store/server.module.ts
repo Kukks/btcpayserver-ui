@@ -81,7 +81,8 @@ export class ServerModule implements ServerModuleData {
         if (this.authenticationResult == null || !this.authenticationResult.authenticated) {
             return false;
         }
-        return this.authenticationResult.permissions.indexOf(permission);
+
+        return this.authenticationResult.permissions.indexOf(permission) >= 0;
     }
 
     public onRehydrate(store) {
@@ -96,6 +97,7 @@ export class ServerModule implements ServerModuleData {
     }
 }
 
-export class Permissions {
-    public static readonly CanCreateStores = "cancreatestore";
-}
+export const Permissions = {
+    CanCreateStores: "CanCreateStores",
+    CanRemoveStores: "CanRemoveStores",
+};

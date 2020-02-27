@@ -2,74 +2,53 @@
     <f7-page name="simple-pos" class="pos">
 
         <f7-row no-gap class="align-items-stretch numpad-row">
-            <f7-col width="100" medium="75" >
-                <f7-input type="number" step="0.01" min="0" :value="amount" class="h-100 pos-input"></f7-input>
+            <f7-col width="100" medium="75">
+                <input type="number" pattern="[0-9]*" step="0.01" min="0" :value="amount"
+                       readonly
+                       class="h-100 pos-input width-100"/>
 
             </f7-col>
             <f7-col width="100" medium="25">
-                <f7-input type="select" step="0.01" min="0" class="h-100  pos-input" :value="currency">>
-                    <option value="BTC">BTC</option>
-                    <option value="EUR">EUR</option>
-                    <option value="USD">USD</option>
+                <f7-input
+                        label="Currency"
+                        type="select"
+                        class="h-100 pos-input"
+                        :value="currency" @input="currency=$event.target.value">
+                    <option v-for="currency in currencies" :key="currency.code" :value="currency.code">{{currency.code}}
+                    </option>
+                    <option value="">Custom</option>
                 </f7-input>
             </f7-col>
         </f7-row>
-        <f7-row no-gap class="align-items-stretch numpad-row">
-            <f7-col>
-                <f7-segmented raised strong class="h-100">
-                    <f7-button class="numpad-button display-inline-flex justify-content-center h-100">1</f7-button>
-                    <f7-button class="numpad-button display-inline-flex justify-content-center h-100">2</f7-button>
-                    <f7-button class="numpad-button display-inline-flex justify-content-center h-100">3</f7-button>
-                </f7-segmented>
 
-            </f7-col>
-
-        </f7-row>
-        <f7-row no-gap class="align-items-stretch numpad-row">
-            <f7-col>
-                <f7-segmented raised strong class="h-100">
-                    <f7-button class="numpad-button display-inline-flex justify-content-center h-100">4</f7-button>
-                    <f7-button class="numpad-button display-inline-flex justify-content-center h-100">5</f7-button>
-                    <f7-button class="numpad-button display-inline-flex justify-content-center h-100">6</f7-button>
-                </f7-segmented>
-
-            </f7-col>
-
-        </f7-row>
-        <f7-row no-gap class="align-items-stretch numpad-row">
-            <f7-col>
-                <f7-segmented raised strong class="h-100">
-                    <f7-button class=" numpad-button display-inline-flex justify-content-center  h-100">7</f7-button>
-                    <f7-button class=" numpad-button display-inline-flex justify-content-center h-100">8</f7-button>
-                    <f7-button class=" numpad-button display-inline-flex justify-content-center h-100">9</f7-button>
-                </f7-segmented>
-
-            </f7-col>
-
-        </f7-row>
-
-        <f7-row no-gap class="align-items-stretch numpad-row">
-            <f7-col>
-                <f7-segmented raised strong class="h-100">
-                    <f7-button class="numpad-button display-inline-flex justify-content-center h-100">Pay</f7-button>
-                </f7-segmented>
-
-            </f7-col>
-        </f7-row>
+        <f7-sheet :opened="true" :close-on-escape="false" :close-by-backdrop-click="false" class="sheet-modal-x"
+                  :close-by-outside-click="false" :backdrop="false">
+            <f7-page-content class="no-padding">
+                <NumPad class="width-100 h-100" v-on:keypad="onKeypad($event)"></NumPad>
+            </f7-page-content>
+        </f7-sheet>
     </f7-page>
 </template>
 <script lang="ts">
-    import {Component, Prop, Vue} from "vue-property-decorator";
+    import {Component, Prop, Vue, Watch} from "vue-property-decorator";
     import {useStore} from "vuex-simple";
     import {RootModule} from "@/store/root.module";
     import {ServerModule, StoreModule} from "@/store";
+    import NumPad from "@/components/NumPad.vue";
 
     @Component({
-        components: {}
+        components: {NumPad}
     })
     export default class SimplePOS extends Vue {
-        public amount: number = 1;
-        public currency: string = "USD";
+        
+        public get parsedAmount(){
+            if(this.amount.endsWith(".")){
+                return this.amount.substr(0,this.amount.length-1);
+            }
+            return this.amount
+        }
+        public amount: string = "1.00";
+        public currency: string = "";
 
         @Prop({required: true})
         public serverId!: string;
@@ -77,7 +56,10 @@
         public storeId!: string;
 
         public store: RootModule = useStore(this.$store);
-        public editMode = false;
+
+        public get currencies() {
+            return this.store.appPreferences.currencies ?? [];
+        }
 
         public get serverModule(): ServerModule | null {
             if (this.serverId) {
@@ -93,31 +75,56 @@
             return null;
         }
 
+        public mounted() {
+            this.currency = this.currencies[0]?.code;
+        }
+
+        @Watch("currency")
+        public currencyChanged(val: string) {
+            if (!val) {
+                this.$f7?.dialog.prompt("Currency code", (val: string) => {
+                    this.currency = val;
+                }, (val: string) => {
+                    this.currency = val;
+                }, "BTC");
+            } else {
+                this.store?.appPreferences?.addCurrency({code: val, name: val, divisibility: 8, symbol: val});
+            }
+        }
+
+        public onKeypad(evt) {
+            if (evt === "clear") {
+                if (this.amount.length > 0) {
+                    this.amount = this.amount.substr(0, this.amount.length - 1);
+                }
+            } else if (evt === ".") {
+                if (this.amount.indexOf(".") === -1) {
+                    this.amount = this.amount + ".";
+                }
+            } else {
+                this.amount = this.amount + "" + evt;
+            }
+
+        }
+
+
     }
 </script>
 <style scoped lang="scss">
 
-    .pos-input, .numpad-button{
+    .pos-input {
         font-size: 4rem;
         font-weight: bold;
-        text-align:center;
-    }
-    
-    .numpad-button {
-        border-bottom: 1px solid rgba(0,0,0,0.2);
-        border-left-color: rgba(0,0,0,0.2);
+        text-align: center;
+        text-align-last: center;
     }
 
     .h-100 {
         height: 100%;
     }
 
-    .numpad-row {
-        min-height: 20vh;
-
-        &:first-child, &:last-child {
-            min-height: 10vh;
-        }
+    .sheet-modal-x {
+        height: 50vh
     }
-
+    
 </style>

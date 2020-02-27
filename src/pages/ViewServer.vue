@@ -16,11 +16,12 @@
             <f7-row>
                 <f7-col width="100" medium="50" large="25">
                     <ServerStatus v-if="serverData.authenticationResult"
-                                  :data="serverData.authenticationResult"></ServerStatus>
+                                  :data="serverData.authenticationResult" 
+                                    @refresh="refreshServerData()"></ServerStatus>
                 </f7-col>
                 <f7-col  width="100" medium="50" large="25" >
                     <StoreList :data="serverData.stores.map(value => serverData.store(value))" :server-id="serverId"
-                               :can-add-store="serverData.hasPermission(Permissions.CanCreateStores)"></StoreList>
+                               :can-add-store="serverData.hasPermission(Permissions.CanCreateStores)" :can-remove-store="Permissions.CanRemoveStores"></StoreList>
                 </f7-col>
                 <f7-col width="100" medium="50" large="25">
                     <ServerStatus v-if="serverData.authenticationResult"
@@ -100,6 +101,10 @@
                 return;
             }
             this.$f7router?.back();            
+        }
+        
+        public async refreshServerData() {
+            await this.serverData?.update();
         }
     }
 </script>

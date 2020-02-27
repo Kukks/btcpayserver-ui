@@ -23,6 +23,8 @@ export class StoreService {
         }
         return false;
     }
+    
+    
 }
 const storeService = new StoreService();
 export default storeService;
