@@ -1,5 +1,5 @@
 <template>
-    <f7-app :params="f7params" :theme-dark="darkTheme" :class="[ colorTheme? `color-${colorTheme}` : '']">
+    <f7-app :params="f7params" :theme-dark="darkTheme" :class="[ colorTheme? `color-theme-${colorTheme}` : '']">
         
         <f7-navbar title="BTCPay Server">
             <f7-link v-if="showLeftPanel" slot="left" icon-md="material:menu" icon-aurora="material:menu" icon-ios="f7:bars" icon panel-open="left"></f7-link>
@@ -47,7 +47,7 @@
         }
         
         public get colorTheme() {
-            return this.store.appPreferences.colorTheme;
+            return this.store.appPreferences.colorTheme? this.store.appPreferences.colorTheme : "btcpay";
         }
         
         public mounted(){
@@ -55,7 +55,7 @@
                 this.$f7ready(f7 => {
                     const sx = (f7.utils as any).colorThemeCSSProperties('#1e7a44');
                     
-                    this.cssTheme = `<style>:root{${Object.keys(sx).map(value => `${value}: ${sx[value]}; `)} }</style>`;
+                    this.cssTheme = `<style>.color-theme-btcpay {${Object.keys(sx).map(value => `${value}: ${sx[value]};`).join(' ')} }</style>`;
                 });
             }
             

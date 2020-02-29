@@ -5,7 +5,7 @@ export class AppPreferencesModule {
     @State()
     public darkMode: boolean = true;    
     @State()
-    public colorTheme: string = "";
+    public colorTheme: string = "btcpay";
 
     @State()
     public defaultServerId: Guid | null = null;
