@@ -1,9 +1,9 @@
 <template>
     <f7-page name="simple-pos" class="pos">
-
+        
         <f7-row no-gap class="align-items-stretch numpad-row">
             <f7-col width="100" medium="75">
-                <input type="number" pattern="[0-9]*" step="0.01" min="0" :value="amount"
+                <input type="number" pattern="[0-9]*" step="0.01" min="0" :value="amount" onfocus="blur();"
                        readonly
                        class="h-100 pos-input width-100"/>
 
@@ -20,13 +20,23 @@
                 </f7-input>
             </f7-col>
         </f7-row>
+        <f7-row>
+            <f7-col width="100">
+                <f7-button class="width-100 pos-input" large>Pay</f7-button>
+            </f7-col>
+        </f7-row>
 
-        <f7-sheet :opened="true" :close-on-escape="false" :close-by-backdrop-click="false" class="sheet-modal-x"
-                  :close-by-outside-click="false" :backdrop="false">
-            <f7-page-content class="no-padding">
+        <f7-sheet :opened="sheetOpened" :close-on-escape="false" :close-by-backdrop-click="false"
+                  @sheet:closed="onSheetClosed"
+                  :close-by-outside-click="false" :backdrop="false" swipe-to-close>
+            <f7-page-content class="">
                 <NumPad class="width-100 h-100" v-on:keypad="onKeypad($event)"></NumPad>
             </f7-page-content>
         </f7-sheet>
+        <f7-toolbar>
+            <f7-link @click="sheetOpened = true">Left Link</f7-link>
+            <f7-link @click="sheetOpened = true">Right Link</f7-link>
+        </f7-toolbar>
     </f7-page>
 </template>
 <script lang="ts">
@@ -40,13 +50,15 @@
         components: {NumPad}
     })
     export default class SimplePOS extends Vue {
-        
-        public get parsedAmount(){
-            if(this.amount.endsWith(".")){
-                return this.amount.substr(0,this.amount.length-1);
+
+        public get parsedAmount() {
+            if (this.amount.endsWith(".")) {
+                return this.amount.substr(0, this.amount.length - 1);
             }
             return this.amount
         }
+
+        public sheetOpened = false;
         public amount: string = "1.00";
         public currency: string = "";
 
@@ -56,6 +68,10 @@
         public storeId!: string;
 
         public store: RootModule = useStore(this.$store);
+
+        public onSheetClosed() {
+            this.sheetOpened = false;
+        }
 
         public get currencies() {
             return this.store.appPreferences.currencies ?? [];
