@@ -2,6 +2,33 @@
   height: 100% !important;
 }
 
-.theme-dark select option{
-    background-color: var(--f7-page-bg-color);
+.theme-dark select option {
+  background-color: var(--f7-page-bg-color);
+}
+
+
+
+//fix bottom toolbar not appearing..
+.toolbar-bottom {
+  bottom: 56px;
+}
+
+@supports (-moz-appearance:none) {
+  .page {
+    padding-bottom: 98px
   }
+}
+
+@supports (not (-moz-appearance:none)) {
+  .toolbar-bottom ~ .page-content {
+    padding-bottom: 98px
+  }
+}
+
+@media (min-width: 768px) and (min-height: 600px) {
+  :root {
+    .toolbar-bottom {
+      bottom: 64px;
+    }
+  }
+}
