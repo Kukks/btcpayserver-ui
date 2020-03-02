@@ -11,6 +11,7 @@ import {Permissions} from "@/store/server.module";
 import {useStore} from "vuex-simple";
 import {RootModule} from "@/store/root.module";
 import {generateUrl, Routes} from "@/routes";
+import "./main.scss";
 
 Vue.config.productionTip = false;
 Vue.prototype.Permissions = Permissions;

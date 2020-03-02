@@ -1,18 +1,18 @@
 <template>
     <f7-page name="simple-pos" class="pos">
         
-        <f7-row no-gap class="align-items-stretch numpad-row">
+        <f7-row no-gap class="align-items-stretch">
             <f7-col width="100" medium="75">
                 <input type="number" pattern="[0-9]*" step="0.01" min="0" :value="amount" onfocus="blur();"
                        readonly
-                       class="h-100 pos-input width-100"/>
+                       class="h-100 width-100"/>
 
             </f7-col>
             <f7-col width="100" medium="25">
                 <f7-input
                         label="Currency"
                         type="select"
-                        class="h-100 pos-input"
+                        class="h-100"
                         :value="currency" @input="currency=$event.target.value">
                     <option v-for="currency in currencies" :key="currency.code" :value="currency.code">{{currency.code}}
                     </option>
@@ -22,18 +22,18 @@
         </f7-row>
         <f7-row>
             <f7-col width="100">
-                <f7-button class="width-100 pos-input" large>Pay</f7-button>
+                <f7-button class="width-100 pos-input" large fill>Pay</f7-button>
             </f7-col>
         </f7-row>
 
         <f7-sheet :opened="sheetOpened" :close-on-escape="false" :close-by-backdrop-click="false"
                   @sheet:closed="onSheetClosed"
                   :close-by-outside-click="false" :backdrop="false" swipe-to-close>
-            <f7-page-content class="">
+            <f7-page-content>
                 <NumPad class="width-100 h-100" v-on:keypad="onKeypad($event)"></NumPad>
             </f7-page-content>
         </f7-sheet>
-        <f7-toolbar>
+        <f7-toolbar bottom>
             <f7-link @click="sheetOpened = true">Left Link</f7-link>
             <f7-link @click="sheetOpened = true">Right Link</f7-link>
         </f7-toolbar>
@@ -126,21 +126,16 @@
 
     }
 </script>
-<style scoped lang="scss">
+<style lang="scss">
+    .pos{
+        input, .input-with-value, select option {
+            font-size: 4rem !important;
+            font-weight: bold !important;
+            text-align: center !important;
+            text-align-last: center !important;
 
-    .pos-input {
-        font-size: 4rem;
-        font-weight: bold;
-        text-align: center;
-        text-align-last: center;
-    }
-
-    .h-100 {
-        height: 100%;
-    }
-
-    .sheet-modal-x {
-        height: 50vh
+        }
+        
     }
     
 </style>

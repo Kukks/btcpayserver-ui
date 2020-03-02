@@ -9,8 +9,6 @@
         </f7-view>
         <div v-html="cssTheme"></div>
     </f7-app>
-
-
 </template>
 
 <script lang="ts">
