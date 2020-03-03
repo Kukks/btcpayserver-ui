@@ -1,10 +1,10 @@
 <template>
     <f7-page name="simple-pos" class="pos">
-        
         <f7-row no-gap class="align-items-stretch">
             <f7-col width="100" medium="75">
-                <input type="number" pattern="[0-9]*" step="0.01" min="0" :value="amount" onfocus="blur();"
-                       readonly
+                <input type="number" pattern="[0-9]*" step="0.01" min="0" :value="amount"
+                       onfocus="onInputFocus($event);"
+                       :readonly="sheetOpened"
                        class="h-100 width-100"/>
 
             </f7-col>
@@ -22,20 +22,29 @@
         </f7-row>
         <f7-row>
             <f7-col width="100">
-                <f7-button class="width-100 pos-input" large fill>Pay</f7-button>
+                <f7-button class="pos-input" large fill>Pay</f7-button>
             </f7-col>
         </f7-row>
 
         <f7-sheet :opened="sheetOpened" :close-on-escape="false" :close-by-backdrop-click="false"
                   @sheet:closed="onSheetClosed"
                   :close-by-outside-click="false" :backdrop="false" swipe-to-close>
-            <f7-page-content>
+            <f7-toolbar>
+                <div class="left"></div>
+                <div class="right">
+                    <f7-link sheet-close>
+                        <f7-icon ios="f7:keyboard" aurora="f7:keyboard" md="material:close"></f7-icon>
+                    </f7-link>
+                </div>
+            </f7-toolbar>
+            <f7-page-content style="padding-top:0px">
                 <NumPad class="width-100 h-100" v-on:keypad="onKeypad($event)"></NumPad>
             </f7-page-content>
         </f7-sheet>
         <f7-toolbar bottom>
-            <f7-link @click="sheetOpened = true">Left Link</f7-link>
-            <f7-link @click="sheetOpened = true">Right Link</f7-link>
+            <f7-link @click="sheetOpened = true" class="width-100">
+                <f7-icon ios="f7:xmark" aurora="f7:xmark" md="material:keyboard"></f7-icon>
+            </f7-link>
         </f7-toolbar>
     </f7-page>
 </template>
@@ -121,6 +130,12 @@
                 this.amount = this.amount + "" + evt;
             }
 
+        }
+
+        public onInputFocus(event: Event) {
+            if (this.sheetOpened) {
+                (event.target as HTMLInputElement).blur();
+            }
         }
 
 
