@@ -67,7 +67,7 @@
             return this.amount
         }
 
-        public sheetOpened = false;
+        public sheetOpened = true;
         public amount: string = "1.00";
         public currency: string = "";
 

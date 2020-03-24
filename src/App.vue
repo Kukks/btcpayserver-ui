@@ -18,7 +18,7 @@
     import {useStore} from "vuex-simple";
     import {RootModule} from "@/store/root.module";
     import LeftPanel from "@/components/LeftPanel.vue";
-    import {startupParameters} from "@/services/url.serv";
+    import {startupParameters} from "@/services/url.service";
 
     @Component({
         components: {

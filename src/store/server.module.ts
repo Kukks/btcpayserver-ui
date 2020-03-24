@@ -16,12 +16,16 @@ export class ServerModule implements ServerModuleData {
     public serverUrl!: string;
     @State()
     public apiKey!: string;
+    @State()
+    public username!: string;
+    @State()
+    public password!: string;
     @Module()
     public authenticationResult = new AuthenticationResultModule();
     @State()
     public stores: string[] = [];
 
-    constructor(data: ServerModuleData = {apiKey: "", serverUrl: ""}) {
+    constructor(data: ServerModuleData = {apiKey: "", serverUrl: "", username: "", password: ""}) {
         this.updateData(data);
     }
 
