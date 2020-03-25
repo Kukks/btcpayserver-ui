@@ -10,12 +10,13 @@ import storeProvider from "@/store";
 import {Permissions} from "@/store/server.module";
 import {useStore} from "vuex-simple";
 import {RootModule} from "@/store/root.module";
-import {generateUrl, Routes} from "@/routes";
 import "./main.scss";
+import {Routes} from "@/routes";
+import routerService from "@/services/router.service";
 
 Vue.config.productionTip = false;
 Vue.prototype.Permissions = Permissions;
-Vue.prototype.generateUrl = generateUrl;
+Vue.prototype.generateUrl = routerService.generateUrl.bind(routerService);
 Vue.prototype.Routes = Routes;
 console.log(process.env);
 const init = async () => {
