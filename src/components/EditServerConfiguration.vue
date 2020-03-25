@@ -74,6 +74,21 @@
             this.serverChanged(this.server)
         }
 
+        @Watch("username")
+        public usernameChanged(val?: string) {
+            if (val) {
+                this.apiKey = "";
+            }
+        }
+
+        @Watch("apiKey")
+        public apiKeyChanged(val?: string) {
+            if (val) {
+                this.username = "";
+                this.password = "";
+            }
+        }
+
         @Watch("server")
         public serverChanged(val?: ServerModuleData) {
             if (val) {
